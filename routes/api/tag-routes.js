@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const { Tag, Product, ProductTag } = require('../../models');
-const { tableName } = require('../../models/Product');
+const { tableName, update } = require('../../models/Product');
 
 // The `/api/tags` endpoint
 
-  // find all tags - TESTED, check included product ok
+// GET all tags - TESTED
 router.get('/', async (req, res) => {
   try {
     const allTags = await Tag.findAll({
@@ -16,11 +16,11 @@ router.get('/', async (req, res) => {
    }
 });
 
-  // find a single tag by its `id` - TESTED, check included product ok
+// GET tag by id - TESTED
 router.get('/:id', async (req, res) => {
   try {
     const tagById = await Tag.findByPk(req.params.id, {
-      include: [{ model: Product }]   // be sure to include its associated Product data
+      include: [{ model: Product }]
     })
 
     if (!tagById) {
@@ -35,7 +35,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-  // create a new tag
+// CREATE tag - TESTED
 router.post('/', async (req, res) => {
   try {
     const newTag = await Tag.create(req.body)
@@ -46,12 +46,26 @@ router.post('/', async (req, res) => {
   
 });
 
-router.put('/:id', (req, res) => {
-  // update a tag's name by its `id` value
+// UPDATE tag by id
+router.put('/:id', async (req, res) => {
+  try {
+    const updatedTag = await Tag.update(req.body, {
+      where: {
+        id: req.params.id
+      }
+    })
+    if (!updatedTag) {
+      res.status(404).json({  message: 'No tag found with that id' })
+      return
+    }
+    res.status(200).json({ message: 'Tag updated', updatedTag })
+  } catch (err) {
+    res.status(500).json(err)
+  }
 });
 
+// DELETE tag by id - TESTED
 router.delete('/:id', async (req, res) => {
-  // delete on tag by its `id` value
   try {
     const deleteTag = await Tag.destroy({
       where: {
@@ -64,7 +78,7 @@ router.delete('/:id', async (req, res) => {
       return
     }
 
-    res.status(200).json(deleteTag)
+    res.status(200).json({ message: 'Tag deleted', deleteTag })
   } catch (err) {
     res.status(500).json(err)
   }
