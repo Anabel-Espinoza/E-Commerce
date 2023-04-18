@@ -3,23 +3,22 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // The `/api/products` endpoint
 
-// get all products
+// get all products   TESTED, BUT need to include its associated Category and Tag data
 router.get('/', async (req, res) => {
   try {
     const allProducts = await Product.findAll()
-    // be sure to include its associated Category and Tag data ???
     res.status(200).json(allProducts)
   } catch (err) {
     res.status(500).json(err)
   }
 });
 
-// get one product
+// get one product // TESTED BUT need to include its associated Category and Tag data ??
 router.get('/:id', async (req, res) => {
   // find a single product by its `id`
   try {
     const productById = await Product.findByPk(req.params.id, {
-      include: [{ model: Tag, through: ProductTag, as: 'product_tag' }] // be sure to include its associated Category and Tag data ??
+      // include: [{ model: Tag, through: ProductTag, as: 'product_tag' }] 
     }) 
   
   if (!productById) {
@@ -34,7 +33,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// create new product
+// create new product - TESTED
 router.post('/', (req, res) => {
   /* req.body should look like this...
     {
@@ -66,9 +65,8 @@ router.post('/', (req, res) => {
     });
 });
 
-// update product
+// update product - TESTED
 router.put('/:id', (req, res) => {
-  // update product data
   Product.update(req.body, {
     where: {
       id: req.params.id,
@@ -108,8 +106,8 @@ router.put('/:id', (req, res) => {
     });
 });
 
+  // delete one product by its `id` value - TESTED
 router.delete('/:id', async (req, res) => {
-  // delete one product by its `id` value
   try {
     const deleteProduct = await Product.destroy({
       where: {
@@ -122,7 +120,7 @@ router.delete('/:id', async (req, res) => {
       return
     }
 
-    res.status(200).json(deleteProduct)
+    res.status(200).json({message: 'product deleted', deleteProduct })
   
   } catch (err) {
     res.status(500).json(err)

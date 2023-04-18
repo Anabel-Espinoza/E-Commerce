@@ -5,7 +5,7 @@ const { Category, Product } = require('../../models');
 
 router.get('/', async (req, res) => {
   try {
-    const allCategories = await Category.findAll() // Need to include associated Products
+    const allCategories = await Category.findAll() // TESTED - Need to include associated Products
     res.status(200).json(allCategories)
   } catch (err) {
     res.status(500).json(err)
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
     const categoryById = await Category.findByPk(req.params.id, {
-      include: [{ model: Product }] // // Need to include associated Products: check this
+      include: [{ model: Product }] // TESTED - includes associated Products: check this
     })
 
     if (!categoryById) {
@@ -29,8 +29,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
-  // create a new category
+router.post('/', async (req, res) => { // TESTED
   try {
     const newCategory = await Category.create(req.body)
     res.status(200).json(newCategory)
@@ -43,8 +42,7 @@ router.put('/:id', async (req, res) => {
   // update a category by its `id` value
 });
 
-router.delete('/:id', async (req, res) => {
-  // delete a category by its `id` value
+router.delete('/:id', async (req, res) => { // TESTED
   try {
     const deleteCategory = await Category.destroy({
       where: {
