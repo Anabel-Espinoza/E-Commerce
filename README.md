@@ -32,7 +32,7 @@ The application allows the user to interact with the database by creating, readi
 - Tag route: /api/tags.
 - Product route: /api/products.
 
-**Video of the application functionality:** 
+**Video of the application functionality:** https://drive.google.com/file/d/1tKcljXODfn9Ad3qFjYGQH_EjSGl-HrFI/view
 
 ## Tests
 
